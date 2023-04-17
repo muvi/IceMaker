@@ -1,0 +1,136 @@
+unit MainUnit;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, StdCtrls,
+  ExtCtrls, IceBluetooth, EditStates;
+
+type
+
+  { TMainForm }
+
+  TMainForm = class(TForm)
+    BatchLbl: TLabel;
+    EditStatesBtn: TButton;
+    TimeLbl: TLabel;
+    StateLbl: TLabel;
+    CheckBtn: TButton;
+    DisconnectBtn: TButton;
+    ConnectBtn: TButton;
+    DevicesCB: TComboBox;
+    ScanBtn: TButton;
+    Timer: TTimer;
+    procedure ConnectBtnClick(Sender: TObject);
+    procedure DisconnectBtnClick(Sender: TObject);
+    procedure EditStatesBtnClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
+    procedure FormDestroy(Sender: TObject);
+    procedure TimeTimer(Sender: TObject);
+    procedure ScanBtnClick(Sender: TObject);
+    procedure CheckBtnClick(Sender: TObject);
+    procedure StartUpload(Sender: TObject);
+    procedure EndUpload(Sender: TObject);
+  private
+    FBluetooth: TIceBluetooth;
+  end;
+
+var
+  MainForm: TMainForm;
+
+implementation
+
+{$R *.lfm}
+
+{ TMainForm }
+
+procedure TMainForm.ScanBtnClick(Sender: TObject);
+var
+  I    : Integer;
+  AName: String;
+begin
+  DevicesCB.Items.Clear;
+  FBluetooth.Bluetooth.ScanDevices;
+  for I:=0 to FBluetooth.Bluetooth.DeviceCount-1
+    do DevicesCB.Items.Add(FBluetooth.Bluetooth.DeviceNames[I]);
+end;
+
+procedure TMainForm.CheckBtnClick(Sender: TObject);
+begin
+  if FBluetooth.QueryCheck
+    then ShowMessage('OK')
+    else ShowMessage('Wrong Response');
+end;
+
+procedure TMainForm.ConnectBtnClick(Sender: TObject);
+var
+  Status   : Integer;
+  AStr     : array [0..255] of Char;
+begin
+  if DevicesCB.ItemIndex < 0
+    then exit;
+  if FBluetooth.Bluetooth.Connect(FBluetooth.Bluetooth.DeviceAddresses[DevicesCB.ItemIndex]) then begin
+    ConnectBtn.Enabled:=false;
+    DisconnectBtn.Enabled:=true;
+    Timer.Enabled:=true;
+  end else ShowMessage('Connection failed');
+end;
+
+procedure TMainForm.DisconnectBtnClick(Sender: TObject);
+begin
+  Timer.Enabled:=false;
+  ConnectBtn.Enabled:=true;
+  DisconnectBtn.Enabled:=false;
+  FBluetooth.Bluetooth.Disconnect;
+end;
+
+procedure TMainForm.EditStatesBtnClick(Sender: TObject);
+begin
+  EditStatesForm.EditStates(FBluetooth);
+end;
+
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  FBluetooth:=TIceBluetooth.Create;
+end;
+
+procedure TMainForm.FormDestroy(Sender: TObject);
+begin
+  FBluetooth.Destroy;
+end;
+
+procedure TMainForm.TimeTimer(Sender: TObject);
+var
+  AStr : string;
+  ATime: LongWord;
+begin
+  FBluetooth.QueryState;
+  StateLbl.Caption:=FBluetooth.State;
+  BatchLbl.Caption:=IntToStr(FBluetooth.BatchesProduced) + ' Batched produced';
+  if FBluetooth.TimedState then begin
+    ATime:=FBluetooth.TimeLeft div 1000;
+    if ATime < 600
+      then AStr:= '0' + IntToStr(ATime div 60)
+      else AStr:=IntToStr(ATime div 60);
+    ATime:=ATime mod 60;
+    if ATime < 10
+      then AStr += ':' + '0' + IntToStr(ATime)
+      else AStr += ':' + IntToStr(ATime);
+    TimeLbl.Caption:=AStr;
+  end else TimeLbl.Caption:='';
+end;
+
+procedure TMainForm.StartUpload(Sender: TObject);
+begin
+  Timer.Enabled:=false;
+end;
+
+procedure TMainForm.EndUpload(Sender: TObject);
+begin
+  Timer.Enabled:=true;
+end;
+
+end.
+

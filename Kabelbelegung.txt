@@ -1,0 +1,4 @@
+Rot: Hot Gas
+Weiß: Pumpe / Ventilator
+Schwarz: Wasser
+Grau: Kompressor

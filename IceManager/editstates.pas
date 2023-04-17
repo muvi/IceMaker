@@ -1,0 +1,342 @@
+unit EditStates;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, FileUtil, DividerBevel, Forms, Controls, Graphics, Dialogs,
+  StdCtrls, Spin, IceBluetooth, IceType, Sockets;
+
+type
+
+  { TEditStatesForm }
+
+  TEditStatesForm = class(TForm)
+    LoadBtn: TButton;
+    OpenDialog: TOpenDialog;
+    SaveBtn: TButton;
+    RelaisBevel1: TDividerBevel;
+    SaveDialog: TSaveDialog;
+    UpBtn: TButton;
+    Mode2Lbl: TLabel;
+    PumpCB: TCheckBox;
+    HotGasCB: TCheckBox;
+    ChangeBevel: TDividerBevel;
+    RelaisBevel: TDividerBevel;
+    CompressorCB: TCheckBox;
+    EvaporatorHotCB: TCheckBox;
+    BinEmptyCB: TCheckBox;
+    BinFullCB: TCheckBox;
+    Mode2Edit: TSpinEdit;
+    DownBtn: TButton;
+    WaterCB: TCheckBox;
+    IncrementCounterCB: TCheckBox;
+    EvaporatorColdCB: TCheckBox;
+    TimeCB: TCheckBox;
+    TimeDotLbl: TLabel;
+    NextStateLbl: TLabel;
+    IncrementCounterLbl: TLabel;
+    RefreshBtn: TButton;
+    SecondsEdit: TSpinEdit;
+    MinutesEdit: TSpinEdit;
+    UploadBtn: TButton;
+    DescriptionEdit: TEdit;
+    NextStateEdit: TSpinEdit;
+    StateLB: TListBox;
+    procedure BinEmptyCBClick(Sender: TObject);
+    procedure BinFullCBClick(Sender: TObject);
+    procedure DownBtnClick(Sender: TObject);
+    procedure LoadBtnClick(Sender: TObject);
+    procedure MinutesEditChange(Sender: TObject);
+    procedure Mode2EditChange(Sender: TObject);
+    procedure RelaisCBClick(Sender: TObject);
+    procedure DescriptionEditChange(Sender: TObject);
+    procedure EvaporatorColdCBClick(Sender: TObject);
+    procedure EvaporatorHotCBClick(Sender: TObject);
+    procedure IncrementCounterCBClick(Sender: TObject);
+    procedure NextStateEditChange(Sender: TObject);
+    procedure RefreshBtnClick(Sender: TObject);
+    procedure SaveBtnClick(Sender: TObject);
+    procedure SecondsEditChange(Sender: TObject);
+    procedure StateLBSelectionChange(Sender: TObject; User: boolean);
+    procedure TimeCBClick(Sender: TObject);
+    procedure UpBtnClick(Sender: TObject);
+    procedure UploadBtnClick(Sender: TObject);
+  private
+    FBluetooth    : TIceBluetooth;
+    FState        : PIceState;
+    FOnStartUpload: TNotifyEvent;
+    FOnEndUpload  : TNotifyEvent;
+    procedure SwapStates(AState1, AState2: Integer);
+    procedure ShowModes;
+  public
+    procedure EditStates(ABluetooth: TIceBluetooth; AOnStartUpload, AOnEndUpload: TNotifyEvent);
+  end;
+
+var
+  EditStatesForm: TEditStatesForm;
+
+implementation
+
+{$R *.lfm}
+
+procedure TEditStatesForm.ShowModes;
+var
+  I: Integer;
+begin
+  Mode2Edit.OnChange:=nil;
+  Mode2Edit.Value:=FBluetooth.IceStates.Mode2Entry;
+  Mode2Edit.OnChange:=@Mode2EditChange;
+  StateLB.Items.Clear;
+  for I:=0 to NUMICEMODES-1 do begin
+    StateLB.Items.Add(IntToStr(I) + ': ' + FBluetooth.IceStates.states[I].Description);
+  end;
+  StateLB.ItemIndex:=0;
+end;
+
+procedure TEditStatesForm.RefreshBtnClick(Sender: TObject);
+begin
+  if not FBluetooth.QueryIceStates then begin
+    ShowMessage('Could not retrieve states' + IntToStr(Sockets.socketerror));
+    exit;
+  end;
+  ShowModes;
+end;
+
+procedure TEditStatesForm.SaveBtnClick(Sender: TObject);
+var
+  AFS: TFileStream;
+begin
+  if SaveDialog.Execute then begin
+    AFS:=TFileStream.Create(SaveDialog.FileName, fmCreate);
+    AFS.Write(FBluetooth.IceStates, SizeOf(TIceModes));
+    AFS.Destroy;
+  end;
+end;
+
+procedure TEditStatesForm.SecondsEditChange(Sender: TObject);
+begin
+  FState^.Time:=(FState^.Time div 60000) * 60000 + SecondsEdit.Value * 1000;
+end;
+
+procedure TEditStatesForm.DescriptionEditChange(Sender: TObject);
+begin
+  FState^.Description:=DescriptionEdit.Text;
+  StateLB.Items.Strings[StateLB.ItemIndex]:=IntToStr(StateLB.ItemIndex) + ': ' + DescriptionEdit.Text;
+end;
+
+procedure TEditStatesForm.BinEmptyCBClick(Sender: TObject);
+begin
+  if BinEmptyCB.Checked then begin
+    BinFullCB.Checked:=false;
+    SetFlag(FState^.Flags, STATEFLAG_CHANGEON_BINEMPTY);
+  end else RemoveFlag(FState^.Flags, STATEFLAG_CHANGEON_BINEMPTY);
+end;
+
+procedure TEditStatesForm.BinFullCBClick(Sender: TObject);
+begin
+  if BinFullCB.Checked then begin
+    if BinEmptyCB.Checked then begin
+      RemoveFlag(FState^.Flags, STATEFLAG_BINEMPTY);
+      BinEmptyCB.Checked:=false;
+    end;
+    SetFlag(FState^.Flags, STATEFLAG_CHANGEON_BINFULL);
+  end else RemoveFlag(FState^.Flags, STATEFLAG_CHANGEON_BINFULL);
+end;
+
+procedure TEditStatesForm.DownBtnClick(Sender: TObject);
+begin
+  if StateLB.ItemIndex < StateLB.Items.Count-1 then begin
+    SwapStates(StateLB.ItemIndex, StateLB.ItemIndex+1);
+    StateLB.ItemIndex:=StateLB.ItemIndex + 1;
+  end;
+end;
+
+procedure TEditStatesForm.LoadBtnClick(Sender: TObject);
+var
+  AFS: TFileStream;
+begin
+  if OpenDialog.Execute then begin
+    AFS:=TFileStream.Create(OpenDialog.FileName, fmOpenRead or fmShareDenyNone);
+    if AFS.Size <> SizeOf(TIceModes)
+      then ShowMessage('Invalid File');
+    AFS.Read(FBluetooth.IceStates, SizeOf(TIceModes));
+    AFS.Destroy;
+    ShowModes;
+  end;
+end;
+
+procedure TEditStatesForm.MinutesEditChange(Sender: TObject);
+begin
+  FState^.Time:=(FState^.Time mod 60000) + MinutesEdit.Value * 60000;
+end;
+
+procedure TEditStatesForm.Mode2EditChange(Sender: TObject);
+begin
+  FBluetooth.IceStates.Mode2Entry:=Mode2Edit.Value;
+end;
+
+procedure TEditStatesForm.RelaisCBClick(Sender: TObject);
+begin
+  with TCheckBox(Sender) do if Checked
+    then SetFlag(FState^.RelaisState, Tag)
+    else RemoveFlag(FState^.RelaisState, Tag);
+end;
+
+procedure TEditStatesForm.EvaporatorColdCBClick(Sender: TObject);
+begin
+  if EvaporatorColdCB.Checked then begin
+    if EvaporatorHotCB.Checked then begin
+      RemoveFlag(FState^.Flags, STATEFLAG_EVAPORATORHOT);
+      EvaporatorHotCB.Checked:=false;
+    end;
+    SetFlag(FState^.Flags, STATEFLAG_CHANGEON_EVAPORATORCOLD);
+  end else RemoveFlag(FState^.Flags, STATEFLAG_CHANGEON_EVAPORATORCOLD);
+end;
+
+procedure TEditStatesForm.EvaporatorHotCBClick(Sender: TObject);
+begin
+  if EvaporatorHotCB.Checked then begin
+    EvaporatorColdCB.Checked:=false;
+    SetFlag(FState^.Flags, STATEFLAG_CHANGEON_EVAPORATORHOT);
+  end else RemoveFlag(FState^.Flags, STATEFLAG_CHANGEON_EVAPORATORHOT);
+end;
+
+procedure TEditStatesForm.IncrementCounterCBClick(Sender: TObject);
+begin
+  if IncrementCounterCB.Checked
+    then SetFlag(FState^.Flags, STATEFLAG_INCCOUNTER)
+    else RemoveFlag(FState^.Flags, STATEFLAG_INCCOUNTER);
+end;
+
+procedure TEditStatesForm.NextStateEditChange(Sender: TObject);
+begin
+  FState^.NextState:=NextStateEdit.Value;
+end;
+
+procedure TEditStatesForm.StateLBSelectionChange(Sender: TObject; User: boolean);
+var
+  ATimeEnabled: Boolean;
+begin
+  DescriptionEdit.OnChange:=nil;
+  NextStateEdit.OnChange:=nil;
+  IncrementCounterCB.OnClick:=nil;
+  TimeCB.OnClick:=nil;
+  MinutesEdit.OnChange:=nil;
+  SecondsEdit.OnChange:=nil;
+  EvaporatorColdCB.OnClick:=nil;
+  EvaporatorHotCB.OnClick:=nil;
+  BinEmptyCB.OnClick:=nil;
+  BinFullCB.OnClick:=nil;
+  CompressorCB.OnClick:=nil;
+  WaterCB.OnClick:=nil;
+  PumpCB.OnClick:=nil;
+  HotGasCB.OnClick:=nil;
+
+  FState:=@FBluetooth.IceStates.states[StateLB.ItemIndex];
+  with FState^ do begin
+    DescriptionEdit.Text:=Description;
+    NextStateEdit.Value:=NextState;
+    IncrementCounterCB.Checked:=HasFlag(Flags, STATEFLAG_INCCOUNTER);
+    ATimeEnabled:=Time < TIMEOFF;
+    TimeCB.Checked:=ATimeEnabled;
+    SecondsEdit.Enabled:=ATimeEnabled;
+    MinutesEdit.Enabled:=ATimeEnabled;
+    if ATimeEnabled then begin
+      SecondsEdit.Value:=(Time div 1000) mod 60;
+      MinutesEdit.Value:=Time div 60000;
+    end else begin
+      SecondsEdit.Value:=0;
+      MinutesEdit.Value:=0;
+    end;
+    EvaporatorColdCB.Checked:=HasFlag(Flags, STATEFLAG_EVAPORATORENABLED) and not HasFlag(Flags, STATEFLAG_EVAPORATORHOT);
+    EvaporatorHotCB.Checked:=HasFlag(Flags, STATEFLAG_EVAPORATORENABLED or STATEFLAG_EVAPORATORHOT);
+    BinFullCB.Checked:=HasFlag(Flags, STATEFLAG_BINENABLED) and not HasFlag(Flags, STATEFLAG_BINEMPTY);
+    BinEmptyCB.Checked:=HasFlag(Flags, STATEFLAG_BINENABLED or STATEFLAG_BINEMPTY);
+    CompressorCB.Checked:=HasFlag(RelaisState, RELAIS_COMPRESSOR);
+    WaterCB.Checked:=HasFlag(RelaisState, RELAIS_WATER);
+    PumpCB.Checked:=HasFlag(RelaisState, RELAIS_PUMP);
+    HotGasCB.Checked:=HasFlag(RelaisState, RELAIS_HOTGAS);
+  end;
+
+  DescriptionEdit.OnChange:=@DescriptionEditChange;
+  NextStateEdit.OnChange:=@NextStateEditChange;
+  IncrementCounterCB.OnClick:=@IncrementCounterCBClick;
+  TimeCB.OnClick:=@TimeCBClick;
+  MinutesEdit.OnChange:=@MinutesEditChange;
+  SecondsEdit.OnChange:=@SecondsEditChange;
+  EvaporatorColdCB.OnClick:=@EvaporatorColdCBClick;
+  EvaporatorHotCB.OnClick:=@EvaporatorHotCBClick;
+  BinEmptyCB.OnClick:=@BinEmptyCBClick;
+  BinFullCB.OnClick:=@BinFullCBClick;
+  CompressorCB.OnClick:=@RelaisCBClick;
+  WaterCB.OnClick:=@RelaisCBClick;
+  PumpCB.OnClick:=@RelaisCBClick;
+  HotGasCB.OnClick:=@RelaisCBClick;
+end;
+
+procedure TEditStatesForm.TimeCBClick(Sender: TObject);
+begin
+  MinutesEdit.Enabled:=TimeCB.Checked;
+  SecondsEdit.Enabled:=TimeCB.Checked;
+  if TimeCB.Checked then begin
+    MinutesEdit.Value:=1;
+    SecondsEdit.Value:=0;
+    FState^.Time:=60000;
+  end else begin
+    MinutesEdit.Value:=0;
+    SecondsEdit.Value:=0;
+    FState^.Time:=TIMEOFF;
+  end;
+end;
+
+procedure TEditStatesForm.UpBtnClick(Sender: TObject);
+begin
+  if StateLB.ItemIndex > 0 then begin
+    SwapStates(StateLB.ItemIndex, StateLB.ItemIndex-1);
+    StateLB.ItemIndex:=StateLB.ItemIndex - 1;
+  end;
+end;
+
+procedure TEditStatesForm.UploadBtnClick(Sender: TObject);
+begin
+  if Assigned(FOnStartUpload)
+    then FOnStartUpload(Self);
+  if FBluetooth.SetStates
+    then ShowMessage('Upload Successfull')
+    else ShowMessage('Upload failed');
+  if Assigned(FOnEndUpload)
+    then FOnEndUpload(Self);
+end;
+
+procedure TEditStatesForm.EditStates(ABluetooth: TIceBluetooth; AOnStartUpload, AOnEndUpload: TNotifyEvent);
+begin
+  FOnStartUpload:=AOnStartUpload;
+  FOnEndUpload:=AOnEndUpload;
+  FBluetooth:=ABluetooth;
+  Show;
+end;
+
+procedure TEditStatesForm.SwapStates(AState1, AState2: Integer);
+var
+  I         : Integer;
+  ATempState: TIceState;
+begin
+  with FBluetooth.IceStates do begin
+    StateLB.Items.Strings[AState1]:=IntToStr(AState1) + ': ' + States[AState2].Description;
+    StateLB.Items.Strings[AState2]:=IntToStr(AState2) + ': ' + States[AState1].Description;
+    ATempState:=States[AState2];
+    States[AState2]:=States[AState1];
+    States[AState1]:=ATempState;
+    for I:=0 to NUMICEMODES-1 do with States[I] do begin
+      if NextState = AState1
+        then NextState:=AState2
+        else if NextState = AState2
+          then NextState:=AState1;
+    end;
+  end;
+end;
+
+end.
+

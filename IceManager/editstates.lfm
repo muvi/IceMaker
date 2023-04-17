@@ -1,0 +1,314 @@
+object EditStatesForm: TEditStatesForm
+  Left = 0
+  Height = 460
+  Top = 0
+  Width = 558
+  ActiveControl = StateLB
+  BorderStyle = bsSingle
+  Caption = 'Edit States'
+  ClientHeight = 460
+  ClientWidth = 558
+  OnShow = RefreshBtnClick
+  Position = poMainFormCenter
+  LCLVersion = '1.6.2.0'
+  Visible = False
+  object StateLB: TListBox
+    Left = 55
+    Height = 400
+    Top = 8
+    Width = 200
+    ItemHeight = 0
+    OnSelectionChange = StateLBSelectionChange
+    ScrollWidth = 198
+    TabOrder = 0
+    TopIndex = -1
+  end
+  object DescriptionEdit: TEdit
+    Left = 263
+    Height = 37
+    Top = 8
+    Width = 288
+    MaxLength = 20
+    OnChange = DescriptionEditChange
+    TabOrder = 1
+  end
+  object NextStateEdit: TSpinEdit
+    Left = 413
+    Height = 37
+    Top = 56
+    Width = 138
+    MaxValue = 14
+    OnChange = NextStateEditChange
+    TabOrder = 2
+  end
+  object UploadBtn: TButton
+    Left = 452
+    Height = 37
+    Top = 416
+    Width = 99
+    Caption = 'Upload'
+    OnClick = UploadBtnClick
+    TabOrder = 3
+  end
+  object RefreshBtn: TButton
+    Left = 344
+    Height = 37
+    Top = 416
+    Width = 99
+    Caption = 'Refresh'
+    OnClick = RefreshBtnClick
+    TabOrder = 4
+  end
+  object ChangeBevel: TDividerBevel
+    Left = 263
+    Height = 20
+    Top = 136
+    Width = 288
+    Caption = 'Change conditions'
+    Font.Style = [fsBold]
+    ParentFont = False
+  end
+  object IncrementCounterCB: TCheckBox
+    Left = 413
+    Height = 37
+    Top = 96
+    Width = 23
+    AutoSize = False
+    OnClick = IncrementCounterCBClick
+    TabOrder = 5
+  end
+  object NextStateLbl: TLabel
+    Left = 263
+    Height = 37
+    Top = 56
+    Width = 144
+    AutoSize = False
+    Caption = 'Next State:'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object IncrementCounterLbl: TLabel
+    Left = 263
+    Height = 37
+    Top = 96
+    Width = 144
+    AutoSize = False
+    Caption = 'Increment Counter:'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object EvaporatorColdCB: TCheckBox
+    Left = 263
+    Height = 24
+    Top = 200
+    Width = 144
+    AutoSize = False
+    Caption = 'Evaporator Cold'
+    OnClick = EvaporatorColdCBClick
+    TabOrder = 6
+  end
+  object SecondsEdit: TSpinEdit
+    Left = 493
+    Height = 37
+    Top = 160
+    Width = 58
+    MaxValue = 59
+    OnChange = SecondsEditChange
+    TabOrder = 7
+    Value = 59
+  end
+  object MinutesEdit: TSpinEdit
+    Left = 413
+    Height = 37
+    Top = 160
+    Width = 58
+    MaxValue = 71582
+    OnChange = MinutesEditChange
+    TabOrder = 8
+    Value = 100
+  end
+  object TimeCB: TCheckBox
+    Left = 263
+    Height = 37
+    Top = 160
+    Width = 144
+    AutoSize = False
+    Caption = 'Time'
+    OnClick = TimeCBClick
+    TabOrder = 9
+  end
+  object TimeDotLbl: TLabel
+    Left = 479
+    Height = 37
+    Top = 160
+    Width = 8
+    AutoSize = False
+    Caption = ':     '
+    Font.Style = [fsBold]
+    Layout = tlCenter
+    ParentColor = False
+    ParentFont = False
+  end
+  object EvaporatorHotCB: TCheckBox
+    Left = 407
+    Height = 24
+    Top = 200
+    Width = 144
+    AutoSize = False
+    Caption = 'Evaporator Hot'
+    OnClick = EvaporatorHotCBClick
+    TabOrder = 10
+  end
+  object BinEmptyCB: TCheckBox
+    Left = 263
+    Height = 24
+    Top = 224
+    Width = 144
+    AutoSize = False
+    Caption = 'Bin Empty'
+    OnClick = BinEmptyCBClick
+    TabOrder = 11
+  end
+  object BinFullCB: TCheckBox
+    Left = 407
+    Height = 24
+    Top = 224
+    Width = 144
+    AutoSize = False
+    Caption = 'Bin Full'
+    OnClick = BinFullCBClick
+    TabOrder = 12
+  end
+  object CompressorCB: TCheckBox
+    Tag = 8
+    Left = 263
+    Height = 24
+    Top = 280
+    Width = 144
+    AutoSize = False
+    Caption = 'Compressor'
+    OnClick = RelaisCBClick
+    TabOrder = 13
+  end
+  object WaterCB: TCheckBox
+    Tag = 4
+    Left = 407
+    Height = 24
+    Top = 280
+    Width = 144
+    AutoSize = False
+    Caption = 'Water'
+    OnClick = RelaisCBClick
+    TabOrder = 14
+  end
+  object PumpCB: TCheckBox
+    Tag = 2
+    Left = 263
+    Height = 24
+    Top = 304
+    Width = 144
+    AutoSize = False
+    Caption = 'Pump'
+    OnClick = RelaisCBClick
+    TabOrder = 15
+  end
+  object HotGasCB: TCheckBox
+    Tag = 1
+    Left = 407
+    Height = 24
+    Top = 304
+    Width = 144
+    AutoSize = False
+    Caption = 'Hot Gas'
+    OnClick = RelaisCBClick
+    TabOrder = 16
+  end
+  object RelaisBevel: TDividerBevel
+    Left = 263
+    Height = 20
+    Top = 256
+    Width = 288
+    Caption = 'Relais state'
+    Font.Style = [fsBold]
+    LeftIndent = 85
+    ParentFont = False
+  end
+  object Mode2Edit: TSpinEdit
+    Left = 413
+    Height = 37
+    Top = 352
+    Width = 138
+    MaxValue = 14
+    OnChange = Mode2EditChange
+    TabOrder = 17
+  end
+  object Mode2Lbl: TLabel
+    Left = 263
+    Height = 37
+    Top = 352
+    Width = 66
+    AutoSize = False
+    Caption = 'Mode 2:'
+    Layout = tlCenter
+    ParentColor = False
+  end
+  object UpBtn: TButton
+    Left = 8
+    Height = 193
+    Top = 8
+    Width = 40
+    Caption = '⯅'
+    OnClick = UpBtnClick
+    TabOrder = 18
+  end
+  object DownBtn: TButton
+    Left = 8
+    Height = 193
+    Top = 216
+    Width = 40
+    Caption = '⯆'
+    OnClick = DownBtnClick
+    TabOrder = 19
+  end
+  object RelaisBevel1: TDividerBevel
+    Left = 263
+    Height = 20
+    Top = 328
+    Width = 288
+    Caption = 'Global'
+    Font.Style = [fsBold]
+    LeftIndent = 100
+    ParentFont = False
+  end
+  object LoadBtn: TButton
+    Left = 8
+    Height = 37
+    Top = 416
+    Width = 120
+    Caption = 'Load...'
+    OnClick = LoadBtnClick
+    TabOrder = 20
+  end
+  object SaveBtn: TButton
+    Left = 135
+    Height = 37
+    Top = 416
+    Width = 120
+    Caption = 'Save...'
+    OnClick = SaveBtnClick
+    TabOrder = 21
+  end
+  object OpenDialog: TOpenDialog
+    DefaultExt = '.ice'
+    Filter = 'Ice Files|*.ice|All files|*'
+    left = 27
+    top = 36
+  end
+  object SaveDialog: TSaveDialog
+    DefaultExt = '.ice'
+    Filter = 'Ice Files|*.ice|All files|*'
+    Options = [ofPathMustExist, ofEnableSizing, ofViewDetail]
+    left = 30
+    top = 86
+  end
+end

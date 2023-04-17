@@ -1,0 +1,99 @@
+object MainForm: TMainForm
+  Left = 0
+  Height = 485
+  Top = 0
+  Width = 647
+  ActiveControl = SendBtn
+  Caption = 'Ice Manager'
+  ClientHeight = 485
+  ClientWidth = 647
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poDefaultPosOnly
+  LCLVersion = '1.6.2.0'
+  Visible = False
+  object ScanBtn: TButton
+    Left = 8
+    Height = 40
+    Top = 8
+    Width = 147
+    Caption = 'Search Devices'
+    OnClick = ScanBtnClick
+    TabOrder = 0
+  end
+  object DevicesCB: TComboBox
+    Left = 8
+    Height = 36
+    Top = 56
+    Width = 152
+    DropDownCount = 20
+    ItemHeight = 0
+    Style = csDropDownList
+    TabOrder = 1
+  end
+  object ConnectBtn: TButton
+    Left = 8
+    Height = 40
+    Top = 96
+    Width = 147
+    Caption = 'Connect'
+    OnClick = ConnectBtnClick
+    TabOrder = 2
+  end
+  object DisconnectBtn: TButton
+    Left = 8
+    Height = 41
+    Top = 144
+    Width = 147
+    Caption = 'Disconnect'
+    Enabled = False
+    OnClick = DisconnectBtnClick
+    TabOrder = 3
+  end
+  object TerminalMemo: TMemo
+    Left = 168
+    Height = 426
+    Top = 8
+    Width = 470
+    Anchors = [akTop, akLeft, akRight, akBottom]
+    ReadOnly = True
+    TabOrder = 4
+  end
+  object SendBtn: TButton
+    Left = 552
+    Height = 40
+    Top = 440
+    Width = 83
+    Anchors = [akRight, akBottom]
+    Caption = 'Send'
+    Default = True
+    OnClick = SendBtnClick
+    TabOrder = 5
+  end
+  object TerminalEdit: TEdit
+    Left = 168
+    Height = 37
+    Top = 440
+    Width = 376
+    Anchors = [akLeft, akRight, akBottom]
+    TabOrder = 6
+  end
+  object LineFeedCB: TCheckBox
+    Left = 8
+    Height = 24
+    Top = 192
+    Width = 88
+    Caption = 'Line Feed'
+    OnChange = LineFeedCBChange
+    TabOrder = 7
+  end
+  object CarriageReturnCB: TCheckBox
+    Left = 8
+    Height = 24
+    Top = 224
+    Width = 125
+    Caption = 'Carriage Return'
+    OnChange = LineFeedCBChange
+    TabOrder = 8
+  end
+end

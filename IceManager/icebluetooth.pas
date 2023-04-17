@@ -1,0 +1,130 @@
+unit IceBluetooth;
+
+{$mode objfpc}{$H+}
+
+interface
+
+uses
+  Classes, SysUtils, BTManager, IceType, DIalogs;
+
+type
+  TIceStateDescritption = array [0..20] of Char;
+
+  TIceBluetooth         = class
+  private
+    FBluetooth           : TBTManager;
+    FTimeLeft            : LongWord;
+    FBatchesProduced     : Word;
+    FState               : string;
+    function isTimedState: Boolean;
+  public
+    IceStates            : TIceModes;
+    constructor Create;
+    destructor Destroy; override;
+    function QueryState: Boolean;
+    function QueryCheck: Boolean;
+    function QueryIceStates: Boolean;
+    function SetStates: Boolean;
+
+    property BatchesProduced: Word read FBatchesProduced;
+    property Bluetooth: TBTManager read FBluetooth;
+    property State: string read FState;
+    property TimedState: Boolean read isTimedState;
+    property TimeLeft: LongWord read FTimeLeft;
+  end;
+
+implementation
+
+{%REGION TIceBluetooth}
+
+constructor TIceBluetooth.Create;
+begin
+  inherited Create;
+  FBluetooth:=TBTManager.Create;
+
+  FBatchesProduced:=0;
+  FTimeLeft:=0;
+  FState:='';
+end;
+
+destructor TIceBluetooth.Destroy;
+begin
+  FBluetooth.Destroy;
+  inherited Destroy;
+end;
+
+function TIceBluetooth.isTimedState: Boolean;
+begin
+  Result:=FTimeLeft < TIMEOFF;
+end;
+
+function TIceBluetooth.QueryState: Boolean;
+var
+  AMsgId: Char;
+  AMsg  : TIceMsgStateInfo;
+begin
+  AMsgId:=BT_MSGM_QUERYSTATE;
+  FBluetooth.Send(AMsgId, 1);
+
+  //check response
+  FBluetooth.Receive(AMsgId, 1);
+  Result:=AMsgId = BT_MSGS_STATEINFO;
+  if not Result
+    then exit;
+
+  //evaluate response
+  Result:=FBluetooth.ReceiveComplete(AMsg, SizeOf(AMsg));
+  if Result then begin
+    FBatchesProduced:=AMsg.Batches;
+    FTimeLeft:=AMsg.TimeLeft;
+    FState:=AMsg.Description;
+  end;
+end;
+
+function TIceBluetooth.QueryCheck: Boolean;
+var
+  AMsgId: Char;
+begin
+  AMsgId:=BT_MSGM_CHECK;
+  FBluetooth.Send(AMsgId, 1);
+  Result:=FBluetooth.Receive(AMsgId, 1) = 1;
+  if Result
+    then Result:=AMsgId = BT_MSGS_CHECKRESPONSE;
+end;
+
+function TIceBluetooth.QueryIceStates: Boolean;
+var
+  AMsgId: Char;
+begin
+  AMsgId:=BT_MSGM_QUERYSTATES;
+  FBluetooth.Send(AMsgId, 1);
+
+  //check response
+  Result:=FBluetooth.Receive(AMsgId, 1) = 1;
+  if Result
+    then Result:=AMsgId = BT_MSGS_STATES;
+  if not Result
+    then exit;
+
+  //evaluate response
+  Result:=FBluetooth.ReceiveComplete(IceStates, SizeOf(IceStates));
+end;
+
+function TIceBluetooth.SetStates: Boolean;
+var
+  AMsgId    : Char;
+begin
+  AMsgId:=BT_MSGM_SETSTATES;
+  FBluetooth.Send(AMsgId, 1);
+  FBluetooth.Send(IceStates, SizeOf(TIceModes));
+
+  //check response
+  Result:=FBluetooth.Receive(AMsgId, 1) = 1;
+  if Result
+    then Result:=AMsgId = BT_MSGS_SETSTATESOK;
+end;
+
+{%ENDREGION}
+
+end.
+

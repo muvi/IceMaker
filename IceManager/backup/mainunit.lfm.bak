@@ -1,0 +1,102 @@
+object MainForm: TMainForm
+  Left = 0
+  Height = 292
+  Top = 0
+  Width = 368
+  ActiveControl = CheckBtn
+  Caption = 'Ice Manager'
+  ClientHeight = 292
+  ClientWidth = 368
+  OnCreate = FormCreate
+  OnDestroy = FormDestroy
+  Position = poDefaultPosOnly
+  LCLVersion = '1.6.2.0'
+  Visible = False
+  object ScanBtn: TButton
+    Left = 8
+    Height = 40
+    Top = 8
+    Width = 147
+    Caption = 'Search Devices'
+    OnClick = ScanBtnClick
+    TabOrder = 0
+  end
+  object DevicesCB: TComboBox
+    Left = 8
+    Height = 36
+    Top = 56
+    Width = 152
+    DropDownCount = 20
+    ItemHeight = 0
+    Style = csDropDownList
+    TabOrder = 1
+  end
+  object ConnectBtn: TButton
+    Left = 8
+    Height = 40
+    Top = 96
+    Width = 147
+    Caption = 'Connect'
+    OnClick = ConnectBtnClick
+    TabOrder = 2
+  end
+  object DisconnectBtn: TButton
+    Left = 8
+    Height = 41
+    Top = 144
+    Width = 147
+    Caption = 'Disconnect'
+    Enabled = False
+    OnClick = DisconnectBtnClick
+    TabOrder = 3
+  end
+  object CheckBtn: TButton
+    Left = 8
+    Height = 40
+    Top = 193
+    Width = 147
+    Caption = 'Check'
+    Default = True
+    OnClick = CheckBtnClick
+    TabOrder = 4
+  end
+  object StateLbl: TLabel
+    Left = 219
+    Height = 20
+    Top = 29
+    Width = 96
+    Caption = 'State unknown'
+    ParentColor = False
+  end
+  object TimeLbl: TLabel
+    Left = 219
+    Height = 1
+    Top = 56
+    Width = 1
+    ParentColor = False
+  end
+  object BatchLbl: TLabel
+    Left = 219
+    Height = 20
+    Top = 72
+    Width = 127
+    Caption = '0 Batches produced'
+    ParentColor = False
+  end
+  object EditStatesBtn: TButton
+    Left = 8
+    Height = 40
+    Top = 240
+    Width = 147
+    Caption = 'Edit States'
+    OnClick = EditStatesBtnClick
+    TabOrder = 5
+  end
+  object Timer: TTimer
+    Enabled = False
+    Interval = 500
+    OnTimer = TimeTimer
+    left = 168
+    top = 16
+  end
+end

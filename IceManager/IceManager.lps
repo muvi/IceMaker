@@ -1,0 +1,257 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CONFIG>
+  <ProjectSession>
+    <Version Value="9"/>
+    <BuildModes Active="Default"/>
+    <Units Count="13">
+      <Unit0>
+        <Filename Value="IceManager.lpr"/>
+        <IsPartOfProject Value="True"/>
+        <EditorIndex Value="-1"/>
+        <CursorPos X="22" Y="2"/>
+        <UsageCount Value="150"/>
+      </Unit0>
+      <Unit1>
+        <Filename Value="mainunit.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="MainUnit"/>
+        <TopLine Value="99"/>
+        <CursorPos X="65" Y="91"/>
+        <UsageCount Value="150"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit1>
+      <Unit2>
+        <Filename Value="btmanager.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="BTManager"/>
+        <EditorIndex Value="4"/>
+        <TopLine Value="126"/>
+        <CursorPos X="14" Y="136"/>
+        <UsageCount Value="119"/>
+        <Loaded Value="True"/>
+      </Unit2>
+      <Unit3>
+        <Filename Value="icebluetooth.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="IceBluetooth"/>
+        <EditorIndex Value="3"/>
+        <TopLine Value="97"/>
+        <CursorPos Y="120"/>
+        <UsageCount Value="116"/>
+        <Loaded Value="True"/>
+      </Unit3>
+      <Unit4>
+        <Filename Value="icetype.pas"/>
+        <IsPartOfProject Value="True"/>
+        <UnitName Value="IceType"/>
+        <EditorIndex Value="2"/>
+        <TopLine Value="20"/>
+        <CursorPos X="57" Y="36"/>
+        <UsageCount Value="115"/>
+        <Loaded Value="True"/>
+      </Unit4>
+      <Unit5>
+        <Filename Value="editstates.pas"/>
+        <IsPartOfProject Value="True"/>
+        <ComponentName Value="EditStatesForm"/>
+        <HasResources Value="True"/>
+        <ResourceBaseClass Value="Form"/>
+        <UnitName Value="EditStates"/>
+        <IsVisibleTab Value="True"/>
+        <EditorIndex Value="1"/>
+        <TopLine Value="114"/>
+        <CursorPos X="3" Y="131"/>
+        <UsageCount Value="113"/>
+        <Loaded Value="True"/>
+        <LoadedDesigner Value="True"/>
+      </Unit5>
+      <Unit6>
+        <Filename Value="btreceiver.pas"/>
+        <UnitName Value="BTReceiver"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="53"/>
+        <CursorPos X="39" Y="68"/>
+        <UsageCount Value="44"/>
+      </Unit6>
+      <Unit7>
+        <Filename Value="../../../Eigene_Programme/Komponenten/bluetooth/bluetooth.pas"/>
+        <UnitName Value="Bluetooth"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="70"/>
+        <CursorPos X="5" Y="90"/>
+        <UsageCount Value="2"/>
+      </Unit7>
+      <Unit8>
+        <Filename Value="/usr/share/fpcsrc/packages/rtl-extra/src/inc/socketsh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="140"/>
+        <CursorPos X="79" Y="156"/>
+        <UsageCount Value="2"/>
+      </Unit8>
+      <Unit9>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/classes/classesh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="917"/>
+        <CursorPos X="3" Y="935"/>
+        <UsageCount Value="2"/>
+      </Unit9>
+      <Unit10>
+        <Filename Value="/usr/lib64/lazarus/lcl/stdctrls.pp"/>
+        <UnitName Value="StdCtrls"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="1272"/>
+        <CursorPos X="22" Y="1301"/>
+        <UsageCount Value="1"/>
+      </Unit10>
+      <Unit11>
+        <Filename Value="/usr/share/fpcsrc/rtl/linux/ptypes.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="95"/>
+        <CursorPos X="5" Y="111"/>
+        <UsageCount Value="2"/>
+      </Unit11>
+      <Unit12>
+        <Filename Value="/usr/share/fpcsrc/rtl/objpas/sysutils/filutilh.inc"/>
+        <EditorIndex Value="-1"/>
+        <TopLine Value="79"/>
+        <CursorPos X="3" Y="95"/>
+        <UsageCount Value="2"/>
+      </Unit12>
+    </Units>
+    <JumpHistory Count="29" HistoryIndex="28">
+      <Position1>
+        <Filename Value="icebluetooth.pas"/>
+        <Caret Line="120" Column="24" TopLine="96"/>
+      </Position1>
+      <Position2>
+        <Filename Value="icebluetooth.pas"/>
+        <Caret Line="118" TopLine="97"/>
+      </Position2>
+      <Position3>
+        <Filename Value="icebluetooth.pas"/>
+        <Caret Line="120" Column="44" TopLine="104"/>
+      </Position3>
+      <Position4>
+        <Filename Value="icebluetooth.pas"/>
+        <Caret Line="122" Column="34" TopLine="107"/>
+      </Position4>
+      <Position5>
+        <Filename Value="icebluetooth.pas"/>
+        <Caret Line="124" Column="44" TopLine="109"/>
+      </Position5>
+      <Position6>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="61" Column="20" TopLine="33"/>
+      </Position6>
+      <Position7>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="251" Column="21" TopLine="225"/>
+      </Position7>
+      <Position8>
+        <Filename Value="btmanager.pas"/>
+        <Caret Line="136" Column="14" TopLine="126"/>
+      </Position8>
+      <Position9>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="238" Column="59" TopLine="231"/>
+      </Position9>
+      <Position10>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="239" Column="59" TopLine="232"/>
+      </Position10>
+      <Position11>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="268" Column="23" TopLine="245"/>
+      </Position11>
+      <Position12>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="286" Column="35" TopLine="260"/>
+      </Position12>
+      <Position13>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="256" TopLine="253"/>
+      </Position13>
+      <Position14>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="258" TopLine="253"/>
+      </Position14>
+      <Position15>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="130" Column="25"/>
+      </Position15>
+      <Position16>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="131" Column="25" TopLine="99"/>
+      </Position16>
+      <Position17>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="132" Column="25" TopLine="100"/>
+      </Position17>
+      <Position18>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="133" Column="25" TopLine="101"/>
+      </Position18>
+      <Position19>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="134" Column="25" TopLine="102"/>
+      </Position19>
+      <Position20>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="141" Column="25" TopLine="109"/>
+      </Position20>
+      <Position21>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="140" Column="17" TopLine="138"/>
+      </Position21>
+      <Position22>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="143" Column="58" TopLine="138"/>
+      </Position22>
+      <Position23>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="94" TopLine="94"/>
+      </Position23>
+      <Position24>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="109" Column="3" TopLine="92"/>
+      </Position24>
+      <Position25>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="161" TopLine="150"/>
+      </Position25>
+      <Position26>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="112" Column="58" TopLine="101"/>
+      </Position26>
+      <Position27>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="200" Column="19" TopLine="192"/>
+      </Position27>
+      <Position28>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="189" Column="3" TopLine="187"/>
+      </Position28>
+      <Position29>
+        <Filename Value="editstates.pas"/>
+        <Caret Line="139" Column="3" TopLine="137"/>
+      </Position29>
+    </JumpHistory>
+  </ProjectSession>
+  <Debugging>
+    <Watches Count="3">
+      <Item1>
+        <Expression Value="ASIze"/>
+      </Item1>
+      <Item2>
+        <Expression Value="AValue"/>
+      </Item2>
+      <Item3>
+        <Expression Value="IceStates"/>
+      </Item3>
+    </Watches>
+  </Debugging>
+</CONFIG>
